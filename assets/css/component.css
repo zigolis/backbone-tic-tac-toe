@@ -1,0 +1,47 @@
+.header {
+    background: #203041;
+}
+
+.header .col-md-12 {
+    padding: 0;
+}
+
+.header h1 {
+    color: #fff;
+    font-weight: 100;
+    font-size: 25px;
+    margin-bottom: 0;
+    margin-top: 0;
+    padding: 15px 0;
+}
+
+h2 {
+    font-size: 22px;
+    font-weight: 100;
+}
+
+ul {
+    list-style: none;
+}
+
+.box {
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    margin-top: 25px;
+    padding: 15px;
+}
+
+footer {
+    background-color: #203041;
+    bottom: 0;
+    left: 0;
+    padding: 20px 0;
+    position: fixed;
+    right: 0;
+    text-align: center;
+}
+
+footer p {
+    color: #526d8a;
+    margin: 0;
+}
