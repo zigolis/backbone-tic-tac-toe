@@ -1,3 +1,7 @@
+body {
+    font-weight: 100;
+}
+
 .header {
     background: #203041;
 }
@@ -8,11 +12,21 @@
 
 .header h1 {
     color: #fff;
-    font-weight: 100;
     font-size: 25px;
     margin-bottom: 0;
     margin-top: 0;
     padding: 15px 0;
+    font-weight: 100;
+}
+
+.jumbotron {
+    padding: 30px 0;
+}
+
+.jumbotron h1 {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-weight: 100;
 }
 
 h2 {
@@ -20,28 +34,64 @@ h2 {
     font-weight: 100;
 }
 
-ul {
-    list-style: none;
+h3 {
+    font-size: 26px;
+    font-weight: 100;
+    text-align: center;
+    color: #000;
 }
 
-.box {
-    background-color: #f9f9f9;
-    border-radius: 4px;
-    margin-top: 25px;
-    padding: 15px;
+
+.btn {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 100;
+    margin-top: 10px;
+}
+
+ul {
+    list-style: none;
+    overflow: auto;
+    max-width: 415px;
+    margin: 50px auto;
+}
+
+li {
+    float: left;
+    font-size: 45px;
+    background: #f1f1f1;
+    max-width: 120px;
+    padding: 25px 50px;
+    text-align: center;
+    margin-right: 2px;
+    margin-bottom: 2px;
+    cursor: pointer;
+    border-radius: 10px;
+    margin-left: 2px;
+    margin-top: 2px;
+    height: 114px;
+    min-width: 120px;;;
+}
+
+li:hover {
+    transition: background .5s;
+
+    background: #fdfdfd;
 }
 
 footer {
     background-color: #203041;
+    padding: 20px 0;
+    text-align: center;
+    font-size: 14px;
+    position: fixed;
     bottom: 0;
     left: 0;
-    padding: 20px 0;
-    position: fixed;
     right: 0;
-    text-align: center;
 }
 
 footer p {
     color: #526d8a;
+    font-size: 18px;
     margin: 0;
 }
