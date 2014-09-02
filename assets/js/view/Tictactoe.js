@@ -10,28 +10,6 @@ app.TictactoeView = Backbone.View.extend({
 
     initialize: function(){
         player = 1;
-
-        // arrayChicao = [
-        //     this.$el.find('li').get(0).id,
-        //     this.$el.find('li').get(1).id,
-        //     this.$el.find('li').get(2).id,
-        //     this.$el.find('li').get(3).id,
-        //     this.$el.find('li').get(4).id,
-        //     this.$el.find('li').get(5).id,
-        //     this.$el.find('li').get(6).id,
-        //     this.$el.find('li').get(7).id,
-        //     this.$el.find('li').get(8).id
-        // ]
-
-        // console.log('Array-> ' + arrayChicao[0] + ' && HTML-> ' + this.$el.find('li').get(0).id)
-        // console.log('Array-> ' + arrayChicao[1] + ' && HTML-> ' + this.$el.find('li').get(1).id)
-        // console.log('Array-> ' + arrayChicao[2] + ' && HTML-> ' + this.$el.find('li').get(2).id)
-        // console.log('Array-> ' + arrayChicao[3] + ' && HTML-> ' + this.$el.find('li').get(3).id)
-        // console.log('Array-> ' + arrayChicao[4] + ' && HTML-> ' + this.$el.find('li').get(4).id)
-        // console.log('Array-> ' + arrayChicao[5] + ' && HTML-> ' + this.$el.find('li').get(5).id)
-        // console.log('Array-> ' + arrayChicao[6] + ' && HTML-> ' + this.$el.find('li').get(6).id)
-        // console.log('Array-> ' + arrayChicao[7] + ' && HTML-> ' + this.$el.find('li').get(7).id)
-        // console.log('Array-> ' + arrayChicao[8] + ' && HTML-> ' + this.$el.find('li').get(8).id)
     },
 
     restartGame: function() {
@@ -39,8 +17,8 @@ app.TictactoeView = Backbone.View.extend({
         this.$el.find('li').html('');
     },
 
-    verifyWinner: function(e) {
-        pieces = [
+    getValues: function() {
+        map = [
             this.$el.find('li').get(0).innerHTML,
             this.$el.find('li').get(1).innerHTML,
             this.$el.find('li').get(2).innerHTML,
@@ -50,29 +28,47 @@ app.TictactoeView = Backbone.View.extend({
             this.$el.find('li').get(6).innerHTML,
             this.$el.find('li').get(7).innerHTML,
             this.$el.find('li').get(8).innerHTML
-        ]
+        ];
+    },
 
-        if (
-            pieces[0, 1, 2] == 'X' ||
-            pieces[3, 4, 5] == 'X' ||
-            pieces[6, 7, 8] == 'X' ||
-            pieces[0, 3, 6] == 'X' ||
-            pieces[1, 4, 7] == 'X' ||
-            pieces[2, 5, 8] == 'X'
-        ) {
+    checkWin: function() {
+        this.getValues();
+
+        // check rows
+        if (map[0] == 'X' && map[1] == 'X' && map[2] == 'X') {
             alert('there is a winner');
-        };
+        } else if (map[3] == 'X' && map[4] == 'X' && map[5] == 'X') {
+            alert('there is a winner');
+        } else if (map[6] == 'X' && map[7] == 'X' && map[8] == 'X') {
+            alert('there is a winner');
+        }
+
+        // check cols
+        if (map[0] == 'X' && map[3] == 'X' && map[6] == 'X') {
+            alert('there is a winner');
+        } else if (map[1] == 'X' && map[4] == 'X' && map[7] == 'X') {
+            alert('there is a winner');
+        } else if (map[2] == 'X' && map[5] == 'X' && map[8] == 'X') {
+            alert('there is a winner');
+        }
+
+        // check diagonals
+        if (map[0] == 'X' && map[4] == 'X' && map[8] == 'X') {
+            alert('there is a winner');
+        } else if (map[2] == 'X' && map[4] == 'X' && map[6] == 'X') {
+            alert('there is a winner');
+        }
     },
 
     setPlayer: function(e) {
-        this.verifyWinner();
-
         if (player === 1) {
             player --;
             this.setXPlayer(e);
+            this.checkWin();
         } else {
             player ++;
             this.setOPlayer(e);
+            this.checkWin();
         }
     },
 
@@ -86,7 +82,6 @@ app.TictactoeView = Backbone.View.extend({
 
     isEmpty: function(e) {
         if (e.currentTarget.innerHTML) {
-            console.log('Hey there, here was already clicked!')
             return;
         };
 
