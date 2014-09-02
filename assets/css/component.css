@@ -41,19 +41,24 @@ h3 {
     color: #000;
 }
 
+.stage {
+    margin-bottom: 150px;
+}
 
 .btn {
     color: #fff;
-    font-size: 22px;
     font-weight: 100;
-    margin-top: 10px;
+    font-size: 22px;
+    margin: 0 auto;
+    display: block;
 }
 
 ul {
     list-style: none;
     overflow: auto;
-    max-width: 415px;
     margin: 50px auto;
+    max-width: 375px;
+    padding: 0;;
 }
 
 li {
@@ -77,6 +82,10 @@ li:hover {
     transition: background .5s;
 
     background: #fdfdfd;
+}
+
+button:hover {
+    transition: background .5s;
 }
 
 footer {
