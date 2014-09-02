@@ -17,6 +17,43 @@ app.TictactoeView = Backbone.View.extend({
         this.$el.find('li').html('');
     },
 
+    getValuesMult: function() {
+        map = [
+            [
+                this.$el.find('li').get(0).innerHTML,
+                this.$el.find('li').get(1).innerHTML,
+                this.$el.find('li').get(2).innerHTML
+            ],
+            [
+                this.$el.find('li').get(3).innerHTML,
+                this.$el.find('li').get(4).innerHTML,
+                this.$el.find('li').get(5).innerHTML
+            ],
+            [
+                this.$el.find('li').get(6).innerHTML,
+                this.$el.find('li').get(7).innerHTML,
+                this.$el.find('li').get(8).innerHTML
+            ]
+        ];
+    },
+
+    checkWinner: function() {
+        this.getValuesMult();
+
+        combinations = [
+                            [0,1,2],[3,4,5],[6,7,8],
+                            [0,3,6],[1,4,7],[2,5,8],
+                            [0,4,8],[2,4,6]
+                       ];
+
+        for (var a = 0; a < combinations.length; a++) {
+            console.log(combinations[1]);
+            if( combinations[a][0] == 'X' && combinations[a][1] == 'X' && combinations[a][2] == 'X'){
+                console.log(combinations[a][0]);
+            }
+        };
+    },
+
     getValues: function() {
         map = [
             this.$el.find('li').get(0).innerHTML,
@@ -64,11 +101,11 @@ app.TictactoeView = Backbone.View.extend({
         if (player === 1) {
             player --;
             this.setXPlayer(e);
-            this.checkWin();
+            this.checkWinner();
         } else {
             player ++;
             this.setOPlayer(e);
-            this.checkWin();
+            this.checkWinner();
         }
     },
 
