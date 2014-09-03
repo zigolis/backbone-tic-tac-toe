@@ -11,8 +11,13 @@ app.TictactoeView = Backbone.View.extend({
 
     events: {
         'click li'       : 'isEmpty',
-        'click .play'    : 'hideModalWinner',
+        'click .play'    : 'play',
         'click .restart' : 'restartGame'
+    },
+
+    play: function(e) {
+        this.hideModalWinner();
+        this.restartGame();
     },
 
     isEmpty: function(e) {
@@ -45,11 +50,11 @@ app.TictactoeView = Backbone.View.extend({
 
     restartGame: function() {
         this.counter = 1;
-        this.$el.find('li').html('');
+        this.$('li').html('');
     },
 
     getValues: function() {
-        el  = this.$el.find('li');
+        el  = this.$('li');
         this.map = [
             el.get(0).innerHTML, el.get(1).innerHTML, el.get(2).innerHTML,
             el.get(3).innerHTML, el.get(4).innerHTML, el.get(5).innerHTML,
@@ -72,14 +77,12 @@ app.TictactoeView = Backbone.View.extend({
     },
 
     showModalWinner: function(player) {
-        this.$el.find('.success b').text(player);
-        this.$el.find('.hide').removeClass('hide');
+        this.$('.success b').text(player);
+        this.$('.hide').removeClass('hide');
     },
 
     hideModalWinner: function() {
-        this.$el.find('.overlay').addClass('hide');
-        this.$el.find('.success').addClass('hide');
-
-        this.restartGame();
+        this.$('.overlay').addClass('hide');
+        this.$('.success').addClass('hide');
     }
 });
