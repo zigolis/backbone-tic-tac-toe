@@ -6,7 +6,7 @@ app.TictactoeView = Backbone.View.extend({
     playerO: '0',
     map: [],
     match: [],
-    
+
     el: '.stage',
 
     events: {
@@ -48,13 +48,33 @@ app.TictactoeView = Backbone.View.extend({
         e.currentTarget.innerHTML = this.playerO;
     },
 
+    setCpuPlayer: function(bestMove) {
+        this.$('li').get(bestMove).innerHTML = this.playerO;
+        this.counter ++;
+        // this.checkWinner(this.playerO);
+    },
+
     restartGame: function() {
         this.counter = 1;
         this.$('li').html('');
     },
 
+    cpuMove: function() {
+        for (var i = 0; i < this.map.length; i++) {
+            if (this.map[i] == '') {
+                bestMove = i;
+            }
+        }
+
+        if (this.map[4] == '') {
+            bestMove = 4;
+        }
+
+        this.setCpuPlayer(bestMove);
+    },
+
     getValues: function() {
-        el  = this.$('li');
+        el = this.$('li');
         this.map = [
             el.get(0).innerHTML, el.get(1).innerHTML, el.get(2).innerHTML,
             el.get(3).innerHTML, el.get(4).innerHTML, el.get(5).innerHTML,
@@ -74,6 +94,8 @@ app.TictactoeView = Backbone.View.extend({
                 this.showModalWinner(player);
             }
         }
+
+        this.cpuMove();
     },
 
     showModalWinner: function(player) {
