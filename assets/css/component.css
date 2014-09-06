@@ -136,3 +136,7 @@ footer p {
     margin-bottom: 40px;
     text-align: center;
 }
+
+audio {
+    display: none;
+}
