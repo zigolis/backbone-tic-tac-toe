@@ -1,0 +1,19 @@
+{
+  "name": "backbone-tic-tac-toe",
+  "version": "0.0.1",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "backbone": "1.x",
+    "underscore": "1.x",
+    "jquery": "2.x",
+    "bootstrap": "~3.2.0"
+  },
+  "authors": [
+    "zigolis (https://github.com/zigolis)"
+  ]
+}
