@@ -17,11 +17,7 @@ app.TictactoeView = Backbone.View.extend({
     },
 
     initialize: function() {
-        start = confirm('Would you like to play against the CPU?');
-
-        if (!start) {
-            this.multi = true;
-        }
+        this.setup();
     },
 
     play: function(e) {
@@ -29,6 +25,17 @@ app.TictactoeView = Backbone.View.extend({
         this.resetAudio();
         this.restartGame();
         this.initialize();
+    },
+
+    setup: function (options) {
+        var options = options || false;
+
+        if(!localStorage.getItem('cpu') || true == options.restart) {
+            var start = confirm('Would you like to play against the CPU?');
+
+            if (start) localStorage.setItem('cpu', start);
+            else this.multi = true;
+        }
     },
 
     isEmpty: function(e) {
@@ -98,9 +105,13 @@ app.TictactoeView = Backbone.View.extend({
         this.$('audio')[0].src = 'assets/audio/button.mp3';
     },
 
-    restartGame: function() {
+    restartGame: function(event) {
+        var event = event || false;
+
         this.counter = 1;
         this.$('li').html('');
+
+        if (event) this.setup({ restart: true });
     },
 
     cpuMove: function() {
