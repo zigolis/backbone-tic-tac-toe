@@ -55,7 +55,7 @@ TicTacToe.Game = Backbone.View.extend({
     },
 
     isCpuMode: function() {
-        (sessionStorage.getItem('cpu') === true)
+        console.log(sessionStorage.getItem('cpu') === true)
         return sessionStorage.getItem('cpu') === true;
     },
 
