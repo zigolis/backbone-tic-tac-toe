@@ -1,5 +1,5 @@
-var app = app || {};
+var TicTacToe = TicTacToe || {};
 
 $(function() {
-    new app.TictactoeView();
+    new TicTacToe.Game();
 });

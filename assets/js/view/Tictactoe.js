@@ -1,6 +1,6 @@
-var app = app || {};
+var TicTacToe = TicTacToe || {};
 
-app.TictactoeView = Backbone.View.extend({
+TicTacToe.Game = Backbone.View.extend({
     counter: 1,
     playerX: 'X',
     playerO: '0',
@@ -179,9 +179,9 @@ app.TictactoeView = Backbone.View.extend({
 
         for (var a = 0; a < this.match.length; a++) {
             if (
-                this.map[this.match[a][0]] == player
-                && this.map[this.match[a][1]] == player
-                && this.map[this.match[a][2]] == player
+                this.map[this.match[a][0]] == player &&
+                this.map[this.match[a][1]] == player &&
+                this.map[this.match[a][2]] == player
             ) {
                 this.showModalWinner(player);
                 this.playAudio('winner.mp3');
