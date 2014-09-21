@@ -31,7 +31,7 @@ app.TictactoeView = Backbone.View.extend({
         var options = options || false;
 
         if(!localStorage.getItem('cpu') || true == options.restart) {
-            var start = confirm('Would you like to play against the CPU?');
+            var start = confirm('');
 
             if (start) localStorage.setItem('cpu', start);
             else this.multi = true;
@@ -147,7 +147,11 @@ app.TictactoeView = Backbone.View.extend({
         this.getValues();
 
         for (var a = 0; a < this.match.length; a++) {
-            if (this.map[this.match[a][0]] == player && this.map[this.match[a][1]] == player && this.map[this.match[a][2]] == player) {
+            if (
+                this.map[this.match[a][0]] == player
+                && this.map[this.match[a][1]] == player
+                && this.map[this.match[a][2]] == player
+            ) {
                 this.showModalWinner(player);
                 this.playAudio('winner.mp3');
             }

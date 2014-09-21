@@ -118,7 +118,7 @@ footer p {
     top: 0;
 }
 
-.success {
+.success, .setup {
     background: #f1f1f1;
     border: 4px solid #ddd;
     border-radius: 8px;
@@ -135,6 +135,19 @@ footer p {
     font-size: 30px;
     margin-bottom: 40px;
     text-align: center;
+}
+
+.setup {
+    text-align: center;
+}
+
+.setup p {
+    font-size: 25px;
+    margin-bottom: 40px;
+}
+
+.setup .btn {
+    display: inline-block;
 }
 
 audio {
