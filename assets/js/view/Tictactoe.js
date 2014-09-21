@@ -22,13 +22,6 @@ TicTacToe.Game = Backbone.View.extend({
         this.setup();
     },
 
-    play: function(e) {
-        this.hideModalWinner();
-        this.resetAudio();
-        this.restartGame();
-        this.initialize();
-    },
-
     setup: function () {
         if (!this.hasCpuConfig()) {
             this.showModalSetup();
@@ -62,6 +55,7 @@ TicTacToe.Game = Backbone.View.extend({
     },
 
     isCpuMode: function() {
+        (sessionStorage.getItem('cpu') === true)
         return sessionStorage.getItem('cpu') === true;
     },
 
@@ -77,7 +71,13 @@ TicTacToe.Game = Backbone.View.extend({
         }
 
         this.setAgainstCpuPlayer(e);
+    },
 
+    play: function(e) {
+        this.hideModalWinner();
+        this.resetAudio();
+        this.restartGame();
+        this.initialize();
     },
 
     setMultiPlayer: function(e) {
