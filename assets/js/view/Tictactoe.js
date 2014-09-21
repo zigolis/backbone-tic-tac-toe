@@ -13,7 +13,9 @@ app.TictactoeView = Backbone.View.extend({
     events: {
         'click li'       : 'isEmpty',
         'click .play'    : 'play',
-        'click .restart' : 'restartGame'
+        'click .restart' : 'restartGame',
+        'click .cpu'     : 'againstCpu',
+        'click .multi'   : 'multiPlayer'
     },
 
     initialize: function() {
@@ -27,15 +29,40 @@ app.TictactoeView = Backbone.View.extend({
         this.initialize();
     },
 
-    setup: function (options) {
-        var options = options || false;
-
-        if(!localStorage.getItem('cpu') || true == options.restart) {
-            var start = confirm('');
-
-            if (start) localStorage.setItem('cpu', start);
-            else this.multi = true;
+    setup: function () {
+        if (!this.hasCpuConfig()) {
+            this.showModalSetup();
         }
+    },
+
+    showModalSetup: function() {
+        this.$('.overlay, .setup').removeClass('hide');
+    },
+
+    hideModalSetup: function() {
+        this.$('.overlay, .setup').addClass('hide');
+    },
+
+    againstCpu: function() {
+        this.setCpuConfig(true);
+        this.hideModalSetup();
+    },
+
+    multiPlayer: function() {
+        this.setCpuConfig(false);
+        this.hideModalSetup();
+    },
+
+    setCpuConfig: function(cpuConfig) {
+        sessionStorage.setItem('cpu', cpuConfig);
+    },
+
+    hasCpuConfig: function() {
+        return sessionStorage.getItem('cpu') != undefined;
+    },
+
+    isCpuMode: function() {
+        return sessionStorage.getItem('cpu') === true;
     },
 
     isEmpty: function(e) {
@@ -43,26 +70,30 @@ app.TictactoeView = Backbone.View.extend({
             return;
         }
 
-        if (this.multi) {
+        if (!this.isCpuMode()) {
             this.setMultiPlayer(e);
-        } else {
-            this.setAgainstCpuPlayer(e);
+
+            return;
         }
+
+        this.setAgainstCpuPlayer(e);
 
     },
 
     setMultiPlayer: function(e) {
+        this.playAudio();
+
         if (this.counter === 1) {
             this.counter --;
             this.setPlayerX(e);
-            this.playAudio();
             this.checkWinner(this.playerX);
-        } else {
-            this.counter ++;
-            this.setPlayerO(e);
-            this.playAudio();
-            this.checkWinner(this.playerO);
+
+            return;
         }
+
+        this.counter ++;
+        this.setPlayerO(e);
+        this.checkWinner(this.playerO);
     },
 
     setAgainstCpuPlayer: function(e) {
@@ -160,11 +191,10 @@ app.TictactoeView = Backbone.View.extend({
 
     showModalWinner: function(player) {
         this.$('.success b').text(player);
-        this.$('.hide').removeClass('hide');
+        this.$('.overlay, .success').removeClass('hide');
     },
 
     hideModalWinner: function() {
-        this.$('.overlay').addClass('hide');
-        this.$('.success').addClass('hide');
+        this.$('.overlay, .success').addClass('hide');
     }
 });
