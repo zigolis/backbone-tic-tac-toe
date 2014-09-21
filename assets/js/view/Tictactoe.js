@@ -161,12 +161,9 @@ TicTacToe.Game = Backbone.View.extend({
 
     getValues: function() {
         el = this.$('li');
+        this.map = [];
 
-        this.map = [
-            el.get(0).innerHTML, el.get(1).innerHTML, el.get(2).innerHTML,
-            el.get(3).innerHTML, el.get(4).innerHTML, el.get(5).innerHTML,
-            el.get(6).innerHTML, el.get(7).innerHTML, el.get(8).innerHTML
-        ];
+        for (var i = 0; i < el.length; i++) this.map[i] = el.get(i).innerHTML;
 
         this.match = [
             [0,1,2],[3,4,5],[6,7,8],[0,3,6],
