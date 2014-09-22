@@ -12,10 +12,10 @@ TicTacToe.Game = Backbone.View.extend({
 
     events: {
         'click li'       : 'isEmpty',
-        'click .play'    : 'play',
+        'click .play'    : 'playAgain',
         'click .restart' : 'restartGame',
-        'click .cpu'     : 'againstCpu',
-        'click .multi'   : 'multiPlayer'
+        'click .cpu'     : 'playAgainstCpu',
+        'click .multi'   : 'playMultiPlayer'
     },
 
     initialize: function() {
@@ -28,6 +28,19 @@ TicTacToe.Game = Backbone.View.extend({
         }
     },
 
+    hasCpuConfig: function() {
+        return sessionStorage.getItem('cpu') != undefined;
+    },
+
+    setCpuConfig: function(cpuConfig) {
+        this.cpuConfig = parseInt(cpuConfig);
+        sessionStorage.setItem('cpu', cpuConfig);
+    },
+
+    clearCpuConfig: function() {
+        sessionStorage.removeItem('cpu');
+    },
+
     showModalSetup: function() {
         this.$('.overlay, .setup').removeClass('hide');
     },
@@ -36,27 +49,14 @@ TicTacToe.Game = Backbone.View.extend({
         this.$('.overlay, .setup').addClass('hide');
     },
 
-    againstCpu: function() {
-        this.setCpuConfig(true);
+    playAgainstCpu: function() {
+        this.setCpuConfig(1);
         this.hideModalSetup();
     },
 
-    multiPlayer: function() {
-        this.setCpuConfig(false);
+    playMultiPlayer: function() {
+        this.setCpuConfig(0);
         this.hideModalSetup();
-    },
-
-    setCpuConfig: function(cpuConfig) {
-        sessionStorage.setItem('cpu', cpuConfig);
-    },
-
-    hasCpuConfig: function() {
-        return sessionStorage.getItem('cpu') != undefined;
-    },
-
-    isCpuMode: function() {
-        console.log(sessionStorage.getItem('cpu') === true)
-        return sessionStorage.getItem('cpu') === true;
     },
 
     isEmpty: function(e) {
@@ -64,20 +64,16 @@ TicTacToe.Game = Backbone.View.extend({
             return;
         }
 
-        if (!this.isCpuMode()) {
+        if (this.isCpuMode() == false) {
             this.setMultiPlayer(e);
-
             return;
         }
 
         this.setAgainstCpuPlayer(e);
     },
 
-    play: function(e) {
-        this.hideModalWinner();
-        this.resetAudio();
-        this.restartGame();
-        this.initialize();
+    isCpuMode: function() {
+        return sessionStorage.getItem('cpu');
     },
 
     setMultiPlayer: function(e) {
@@ -136,13 +132,23 @@ TicTacToe.Game = Backbone.View.extend({
         this.$('audio')[0].src = 'assets/audio/button.mp3';
     },
 
-    restartGame: function(event) {
-        var event = event || false;
-
+    playAgain: function(e) {
         this.counter = 1;
-        this.$('li').html('');
+        this.hideModalWinner();
+        this.resetAudio();
+        this.clearStage();
+        this.setup();
+    },
 
-        if (event) this.setup({ restart: true });
+    restartGame: function() {
+        this.counter = 1;
+        this.clearStage();
+        this.clearCpuConfig();
+        this.setup();
+    },
+
+    clearStage: function() {
+        this.$('li').html('');
     },
 
     cpuMove: function() {
@@ -163,7 +169,9 @@ TicTacToe.Game = Backbone.View.extend({
         el = this.$('li');
         this.map = [];
 
-        for (var i = 0; i < el.length; i++) this.map[i] = el.get(i).innerHTML;
+        for (var i = 0; i < el.length; i++) {
+            this.map[i] = el.get(i).innerHTML;
+        }
 
         this.match = [
             [0,1,2],[3,4,5],[6,7,8],[0,3,6],
