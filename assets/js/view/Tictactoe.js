@@ -1,17 +1,13 @@
 var TicTacToe = TicTacToe || {};
 
 TicTacToe.Game = Backbone.View.extend({
-    counter: 1,
     playerX: 'X',
     playerO: '0',
-    bestMove: 0,
-    map: [],
-    match: [],
+    board: null,
 
     el: '.stage',
 
     events: {
-        'click li'       : 'isEmpty',
         'click .play'    : 'play',
         'click .restart' : 'restartGame',
         'click .cpu'     : 'againstCpu',
@@ -19,20 +15,33 @@ TicTacToe.Game = Backbone.View.extend({
     },
 
     initialize: function() {
-        this.setup();
+        this.board = new TicTacToe.Board();
+        
+        this.configureListeners();
+        this.configureGame();
+    },
+    
+    configureListeners: function() {
+        this.listenTo(this.board, 'move', this.moveSound);
+        this.listenTo(this.board, 'winner', this.showModalWinner);
+         this.listenTo(this.board, 'tie', this.showModalTie);
+        
+        this.board.configureListeners();
+    },
+    
+    configureGame: function() {
+        if (!this.hasCpuConfig()) {
+            return this.showModalSetup();
+        }
+        
+        this.setPlayerConfig(this.isAgainstCpu());
     },
 
     play: function(e) {
         this.hideModalWinner();
-        this.resetAudio();
-        this.restartGame();
-        this.initialize();
-    },
-
-    setup: function () {
-        if (!this.hasCpuConfig()) {
-            this.showModalSetup();
-        }
+        this.hideModalTie();
+        
+        this.board.restart();
     },
 
     showModalSetup: function() {
@@ -44,154 +53,71 @@ TicTacToe.Game = Backbone.View.extend({
     },
 
     againstCpu: function() {
-        this.setCpuConfig(true);
+        this.setAgainstCpu(true);
         this.hideModalSetup();
     },
 
     multiPlayer: function() {
-        this.setCpuConfig(false);
+        this.setAgainstCpu(false);
         this.hideModalSetup();
     },
-
-    setCpuConfig: function(cpuConfig) {
-        sessionStorage.setItem('cpu', cpuConfig);
+    
+    isAgainstCpu: function() {
+        return sessionStorage.getItem('cpu') === 'true';
     },
-
+    
     hasCpuConfig: function() {
         return sessionStorage.getItem('cpu') != undefined;
     },
 
-    isCpuMode: function() {
-        return sessionStorage.getItem('cpu') === true;
+    setAgainstCpu: function(againstCpu) {
+        sessionStorage.setItem('cpu', againstCpu);
+        
+        this.setPlayerConfig(againstCpu);
     },
-
-    isEmpty: function(e) {
-        if (e.currentTarget.innerHTML) {
-            return;
-        }
-
-        if (!this.isCpuMode()) {
-            this.setMultiPlayer(e);
-
-            return;
-        }
-
-        this.setAgainstCpuPlayer(e);
-
-    },
-
-    setMultiPlayer: function(e) {
-        this.playAudio();
-
-        if (this.counter === 1) {
-            this.counter --;
-            this.setPlayerX(e);
-            this.checkWinner(this.playerX);
-
-            return;
-        }
-
-        this.counter ++;
-        this.setPlayerO(e);
-        this.checkWinner(this.playerO);
-    },
-
-    setAgainstCpuPlayer: function(e) {
-        if (this.counter === 1) {
-            this.counter ++;
-            this.setPlayerX(e);
-            this.playAudio();
-            this.checkWinner(this.playerX);
-        }
-
-        this.setCpuPlayer();
-    },
-
-    setPlayerX: function(e) {
-        e.currentTarget.innerHTML = this.playerX;
-    },
-
-    setPlayerO: function(e) {
-        e.currentTarget.innerHTML = this.playerO;
-    },
-
-    setCpuPlayer: function() {
-        this.counter --;
-        this.cpuMove();
-        bestMove = this.bestMove;
-        this.$('li').get(bestMove).innerHTML = this.playerO;
-        this.playAudio();
-        this.checkWinner(this.playerO);
+    
+    setPlayerConfig: function(againstCpu) {
+        this.board.setPlayers(
+            new TicTacToe.Player({label: this.playerX}),
+            againstCpu ? new TicTacToe.Cpu({label: this.playerO})
+                       : new TicTacToe.Player({label: this.playerO})
+        );
     },
 
     playAudio: function(audio) {
-        if (audio) {
-            this.$('audio')[0].src = 'assets/audio/' + audio;
-        }
-
+        this.$('audio')[0].src = 'assets/audio/' + audio;
         this.$('audio')[0].play();
     },
-
-    resetAudio: function() {
-        this.$('audio')[0].src = 'assets/audio/button.mp3';
+    
+    moveSound: function() {
+        this.playAudio('button.mp3');
     },
 
-    restartGame: function(event) {
-        var event = event || false;
-
-        this.counter = 1;
-        this.$('li').html('');
-
-        if (event) this.setup({ restart: true });
-    },
-
-    cpuMove: function() {
-        for (var i = 0; i < this.map.length; i++) {
-            if (this.map[i] == '') {
-                this.bestMove = i;
-            }
-        }
-
-        if (this.map[4] == '') {
-            this.bestMove = 4;
-        }
-
-        return this.bestMove;
-    },
-
-    getValues: function() {
-        el = this.$('li');
-        this.map = [];
-
-        for (var i = 0; i < el.length; i++) this.map[i] = el.get(i).innerHTML;
-
-        this.match = [
-            [0,1,2],[3,4,5],[6,7,8],[0,3,6],
-            [1,4,7],[2,5,8],[0,4,8],[2,4,6]
-        ];
-    },
-
-    checkWinner: function(player) {
-        this.getValues();
-
-        for (var a = 0; a < this.match.length; a++) {
-            if (
-                this.map[this.match[a][0]] == player &&
-                this.map[this.match[a][1]] == player &&
-                this.map[this.match[a][2]] == player
-            ) {
-                this.showModalWinner(player);
-                this.playAudio('winner.mp3');
-            }
-        }
+    restartGame: function() {
+        this.board.restart();
+        sessionStorage.removeItem('cpu');
+        
+        this.configureGame();
     },
 
     showModalWinner: function(player) {
-        this.$('.success b').text(player);
+        this.playAudio('winner.mp3');
+        
+        this.$('.success b').text(player.getLabel());
         this.$('.overlay, .success').removeClass('hide');
     },
 
     hideModalWinner: function() {
         this.$('.overlay, .success').addClass('hide');
+    },
+    
+    showModalTie: function() {
+//        this.playAudio('tie.mp3'); for the future =)
+        
+        this.$('.overlay, .tie').removeClass('hide');
+    },
+    
+    hideModalTie: function() {
+        this.$('.overlay, .tie').addClass('hide');
     }
 });
