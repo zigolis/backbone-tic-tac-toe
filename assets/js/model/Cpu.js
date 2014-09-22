@@ -2,7 +2,7 @@ var TicTacToe = TicTacToe || {};
 
 TicTacToe.Cpu = TicTacToe.Player.extend({
 	move: function(board) {
-	    this.nextMove(board).$el.click();
+	    this.nextMove(board).playerMove();
 	},
 	
 	nextMove: function(board) {
