@@ -24,7 +24,7 @@ TicTacToe.Game = Backbone.View.extend({
     configureListeners: function() {
         this.listenTo(this.board, 'move', this.moveSound);
         this.listenTo(this.board, 'winner', this.showModalWinner);
-         this.listenTo(this.board, 'tie', this.showModalTie);
+        this.listenTo(this.board, 'tie', this.showModalTie);
         
         this.board.configureListeners();
     },
