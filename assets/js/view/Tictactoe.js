@@ -2,6 +2,7 @@ var TicTacToe = TicTacToe || {};
 
 TicTacToe.Game = Backbone.View.extend({
     counter: 1,
+    moves:   0,
     playerX: 'X',
     playerO: '0',
     bestMove: 0,
@@ -134,7 +135,9 @@ TicTacToe.Game = Backbone.View.extend({
 
     playAgain: function(e) {
         this.counter = 1;
+        this.moves = 0;
         this.hideModalWinner();
+        this.hideModalDraw();
         this.resetAudio();
         this.clearStage();
         this.setup();
@@ -142,6 +145,7 @@ TicTacToe.Game = Backbone.View.extend({
 
     restartGame: function() {
         this.counter = 1;
+        this.moves = 0;
         this.clearStage();
         this.clearCpuConfig();
         this.setup();
@@ -180,6 +184,8 @@ TicTacToe.Game = Backbone.View.extend({
     },
 
     checkWinner: function(player) {
+        var winner = false;
+        this.moves++;
         this.getValues();
 
         for (var a = 0; a < this.match.length; a++) {
@@ -188,10 +194,23 @@ TicTacToe.Game = Backbone.View.extend({
                 this.map[this.match[a][1]] == player &&
                 this.map[this.match[a][2]] == player
             ) {
+                winner = true;
                 this.showModalWinner(player);
                 this.playAudio('winner.mp3');
             }
         }
+        if (winner === false) this.checkDraw();
+    },
+
+    checkDraw: function() {
+        var draw = true; 
+        for (var a = 0; a < this.map; a++) {
+            if (this.map[a] == '') {
+                draw = false;
+                break;
+            }
+        }
+        if (this.moves == this.map.length && draw === true) this.showModalDraw();
     },
 
     showModalWinner: function(player) {
@@ -199,7 +218,15 @@ TicTacToe.Game = Backbone.View.extend({
         this.$('.overlay, .success').removeClass('hide');
     },
 
+    showModalDraw: function() {
+        this.$('.overlay, .draw').removeClass('hide');
+    },
+
     hideModalWinner: function() {
         this.$('.overlay, .success').addClass('hide');
+    },
+
+    hideModalDraw: function() {
+        this.$('.overlay, .draw').addClass('hide');
     }
 });
