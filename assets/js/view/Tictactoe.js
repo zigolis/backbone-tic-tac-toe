@@ -1,45 +1,47 @@
 var TicTacToe = TicTacToe || {};
 
 TicTacToe.Game = Backbone.View.extend({
-    counter: 1,
-    moves:   0,
     playerX: 'X',
     playerO: '0',
-    bestMove: 0,
-    map: [],
-    match: [],
+    board: null,
 
     el: '.stage',
 
     events: {
-        'click li'       : 'isEmpty',
-        'click .play'    : 'playAgain',
+        'click .play'    : 'play',
         'click .restart' : 'restartGame',
-        'click .cpu'     : 'playAgainstCpu',
-        'click .multi'   : 'playMultiPlayer'
+        'click .cpu'     : 'againstCpu',
+        'click .multi'   : 'multiPlayer'
     },
 
     initialize: function() {
-        this.setup();
+        this.board = new TicTacToe.Board();
+
+        this.configureListeners();
+        this.configureGame();
     },
 
-    setup: function () {
+    configureListeners: function() {
+        this.listenTo(this.board, 'move', this.moveSound);
+        this.listenTo(this.board, 'winner', this.showModalWinner);
+        this.listenTo(this.board, 'tie', this.showModalTie);
+
+        this.board.configureListeners();
+    },
+
+    configureGame: function() {
         if (!this.hasCpuConfig()) {
-            this.showModalSetup();
+            return this.showModalSetup();
         }
+
+        this.setPlayerConfig(this.isAgainstCpu());
     },
 
-    hasCpuConfig: function() {
-        return sessionStorage.getItem('cpu') != undefined;
-    },
+    play: function(e) {
+        this.hideModalWinner();
+        this.hideModalTie();
 
-    setCpuConfig: function(cpuConfig) {
-        this.cpuConfig = parseInt(cpuConfig);
-        sessionStorage.setItem('cpu', cpuConfig);
-    },
-
-    clearCpuConfig: function() {
-        sessionStorage.removeItem('cpu');
+        this.board.restart();
     },
 
     showModalSetup: function() {
@@ -50,183 +52,72 @@ TicTacToe.Game = Backbone.View.extend({
         this.$('.overlay, .setup').addClass('hide');
     },
 
-    playAgainstCpu: function() {
-        this.setCpuConfig(1);
+    againstCpu: function() {
+        this.setAgainstCpu(true);
         this.hideModalSetup();
     },
 
-    playMultiPlayer: function() {
-        this.setCpuConfig(0);
+    multiPlayer: function() {
+        this.setAgainstCpu(false);
         this.hideModalSetup();
     },
 
-    isEmpty: function(e) {
-        if (e.currentTarget.innerHTML) {
-            return;
-        }
-
-        if (this.isCpuMode() == false) {
-            this.setMultiPlayer(e);
-            return;
-        }
-
-        this.setAgainstCpuPlayer(e);
+    isAgainstCpu: function() {
+        return sessionStorage.getItem('cpu') === 'true';
     },
 
-    isCpuMode: function() {
-        return sessionStorage.getItem('cpu');
+    hasCpuConfig: function() {
+        return sessionStorage.getItem('cpu') != undefined;
     },
 
-    setMultiPlayer: function(e) {
-        this.playAudio();
+    setAgainstCpu: function(againstCpu) {
+        sessionStorage.setItem('cpu', againstCpu);
 
-        if (this.counter === 1) {
-            this.counter --;
-            this.setPlayerX(e);
-            this.checkWinner(this.playerX);
-
-            return;
-        }
-
-        this.counter ++;
-        this.setPlayerO(e);
-        this.checkWinner(this.playerO);
+        this.setPlayerConfig(againstCpu);
     },
 
-    setAgainstCpuPlayer: function(e) {
-        if (this.counter === 1) {
-            this.counter ++;
-            this.setPlayerX(e);
-            this.playAudio();
-            this.checkWinner(this.playerX);
-        }
-
-        this.setCpuPlayer();
-    },
-
-    setPlayerX: function(e) {
-        e.currentTarget.innerHTML = this.playerX;
-    },
-
-    setPlayerO: function(e) {
-        e.currentTarget.innerHTML = this.playerO;
-    },
-
-    setCpuPlayer: function() {
-        this.counter --;
-        this.cpuMove();
-        bestMove = this.bestMove;
-        this.$('li').get(bestMove).innerHTML = this.playerO;
-        this.playAudio();
-        this.checkWinner(this.playerO);
+    setPlayerConfig: function(againstCpu) {
+        this.board.setPlayers(
+            new TicTacToe.Player({label: this.playerX}),
+            againstCpu ? new TicTacToe.Cpu({label: this.playerO})
+                       : new TicTacToe.Player({label: this.playerO})
+        );
     },
 
     playAudio: function(audio) {
-        if (audio) {
-            this.$('audio')[0].src = 'assets/audio/' + audio;
-        }
-
+        this.$('audio')[0].src = 'assets/audio/' + audio;
         this.$('audio')[0].play();
     },
 
-    resetAudio: function() {
-        this.$('audio')[0].src = 'assets/audio/button.mp3';
-    },
-
-    playAgain: function(e) {
-        this.counter = 1;
-        this.moves = 0;
-        this.hideModalWinner();
-        this.hideModalDraw();
-        this.resetAudio();
-        this.clearStage();
-        this.setup();
+    moveSound: function() {
+        this.playAudio('button.mp3');
     },
 
     restartGame: function() {
-        this.counter = 1;
-        this.moves = 0;
-        this.clearStage();
-        this.clearCpuConfig();
-        this.setup();
-    },
+        this.board.restart();
+        sessionStorage.removeItem('cpu');
 
-    clearStage: function() {
-        this.$('li').html('');
-    },
-
-    cpuMove: function() {
-        for (var i = 0; i < this.map.length; i++) {
-            if (this.map[i] == '') {
-                this.bestMove = i;
-            }
-        }
-
-        if (this.map[4] == '') {
-            this.bestMove = 4;
-        }
-
-        return this.bestMove;
-    },
-
-    getValues: function() {
-        el = this.$('li');
-        this.map = [];
-
-        for (var i = 0; i < el.length; i++) {
-            this.map[i] = el.get(i).innerHTML;
-        }
-
-        this.match = [
-            [0,1,2],[3,4,5],[6,7,8],[0,3,6],
-            [1,4,7],[2,5,8],[0,4,8],[2,4,6]
-        ];
-    },
-
-    checkWinner: function(player) {
-        var winner = false;
-        this.moves++;
-        this.getValues();
-
-        for (var a = 0; a < this.match.length; a++) {
-            if (
-                this.map[this.match[a][0]] == player &&
-                this.map[this.match[a][1]] == player &&
-                this.map[this.match[a][2]] == player
-            ) {
-                winner = true;
-                this.showModalWinner(player);
-                this.playAudio('winner.mp3');
-            }
-        }
-        if (winner === false) this.checkDraw();
-    },
-
-    checkDraw: function() {
-        var draw = true; 
-        for (var a = 0; a < this.map; a++) {
-            if (this.map[a] == '') {
-                draw = false;
-                break;
-            }
-        }
-        if (this.moves == this.map.length && draw === true) this.showModalDraw();
+        this.configureGame();
     },
 
     showModalWinner: function(player) {
-        this.$('.success b').text(player);
-        this.$('.overlay, .success').removeClass('hide');
-    },
+        this.playAudio('winner.mp3');
 
-    showModalDraw: function() {
-        this.$('.overlay, .draw').removeClass('hide');
+        this.$('.success b').text(player.getLabel());
+        this.$('.overlay, .success').removeClass('hide');
     },
 
     hideModalWinner: function() {
         this.$('.overlay, .success').addClass('hide');
     },
 
-    hideModalDraw: function() {
-        this.$('.overlay, .draw').addClass('hide');
+    showModalTie: function() {
+//        this.playAudio('tie.mp3'); for the future =)
+
+        this.$('.overlay, .tie').removeClass('hide');
+    },
+
+    hideModalTie: function() {
+        this.$('.overlay, .tie').addClass('hide');
     }
 });
