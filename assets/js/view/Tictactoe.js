@@ -4,6 +4,7 @@ TicTacToe.Game = Backbone.View.extend({
     playerX: 'X',
     playerO: '0',
     board: null,
+    audioPlayer: null,
 
     el: '.stage',
 
@@ -16,16 +17,17 @@ TicTacToe.Game = Backbone.View.extend({
 
     initialize: function() {
         this.board = new TicTacToe.Board();
+        this.audioPlayer = new TicTacToe.AudioPlayer();
 
         this.configureListeners();
         this.configureGame();
     },
 
     configureListeners: function() {
-        this.listenTo(this.board, 'move', this.moveSound);
         this.listenTo(this.board, 'winner', this.showModalWinner);
         this.listenTo(this.board, 'tie', this.showModalTie);
 
+        this.audioPlayer.configureListeners(this.board);
         this.board.configureListeners();
     },
 
@@ -84,15 +86,6 @@ TicTacToe.Game = Backbone.View.extend({
         );
     },
 
-    playAudio: function(audio) {
-        this.$('audio')[0].src = 'assets/audio/' + audio;
-        this.$('audio')[0].play();
-    },
-
-    moveSound: function() {
-        this.playAudio('button.mp3');
-    },
-
     restartGame: function() {
         this.board.restart();
         sessionStorage.removeItem('cpu');
@@ -101,8 +94,6 @@ TicTacToe.Game = Backbone.View.extend({
     },
 
     showModalWinner: function(player) {
-        this.playAudio('winner.mp3');
-
         this.$('.success b').text(player.getLabel());
         this.$('.overlay, .success').removeClass('hide');
     },
@@ -112,7 +103,6 @@ TicTacToe.Game = Backbone.View.extend({
     },
 
     showModalTie: function() {
-        this.playAudio('tie.mp3');
         this.$('.overlay, .tie').removeClass('hide');
     },
 
