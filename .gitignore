@@ -3,6 +3,3 @@
 assets/vendor/
 node_modules
 npm-debug.log
-.buildpath
-.project
-.settings
