@@ -10,8 +10,6 @@ TicTacToe.SetupModal = TicTacToe.Modal.extend({
 
     configureListeners: function(game) {
         this.listenTo(game.players, 'selectPlayer', this.show);
-
-        game.players.listenTo(this, 'playerConfiguration', game.players.applyConfiguration);
     },
 
     cpu: function() {

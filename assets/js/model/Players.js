@@ -9,6 +9,10 @@ TicTacToe.Players = Backbone.Model.extend({
         this.players[0] = new TicTacToe.Player({label: this.labels[0]});
     },
 
+    configureListeners: function(game) {
+        this.listenTo(game.modals.setup, 'playerConfiguration', this.applyConfiguration);
+    },
+
     selectOpponent: function() {
         if (!this.isAlreadyConfigured()) {
             return this.trigger('selectPlayer');

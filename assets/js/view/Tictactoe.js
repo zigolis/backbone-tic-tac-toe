@@ -24,6 +24,7 @@ TicTacToe.Game = Backbone.View.extend({
     },
 
     configureListeners: function() {
+        this.players.configureListeners(this);
         this.audioPlayer.configureListeners(this);
         this.modals.setup.configureListeners(this);
         this.modals.winner.configureListeners(this);
