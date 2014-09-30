@@ -2,11 +2,11 @@ var TicTacToe = TicTacToe || {};
 
 TicTacToe.AudioPlayer = Backbone.View.extend({
     el: 'audio',
-    
-    configureListeners: function(board) {
-        this.listenTo(board, 'move', this.move);
-        this.listenTo(board, 'winner', this.winner);
-        this.listenTo(board, 'tie', this.tie);
+
+    configureListeners: function(game) {
+        this.listenTo(game, 'move', this.move);
+        this.listenTo(game, 'winner', this.winner);
+        this.listenTo(game, 'tie', this.tie);
     },
 
     playAudio: function(audio) {
@@ -15,13 +15,15 @@ TicTacToe.AudioPlayer = Backbone.View.extend({
     },
 
     move: function() {
+        console.log('move', arguments);
         this.playAudio('button.mp3');
     },
-    
+
     winner: function() {
+        console.log('win', arguments);
         this.playAudio('winner.mp3');
     },
-    
+
     tie: function() {
         this.playAudio('tie.mp3');
     }

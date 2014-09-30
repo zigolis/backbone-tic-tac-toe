@@ -1,21 +1,16 @@
 var TicTacToe = TicTacToe || {};
 
 TicTacToe.Board = Backbone.View.extend({
-    players: [],
-    currentPlayer: -1,
+    game: null,
     map: null,
     match: null,
 
 	el: '.box',
 
-    initialize: function() {
+    initialize: function(options) {
+        this.game = options.game;
+
         this.configureMap();
-        this.nextPlayer();
-
-    },
-
-    configureListeners: function() {
-        this.listenTo(this, 'move', this.nextPlayer);
     },
 
     configureMap: function() {
@@ -26,7 +21,12 @@ TicTacToe.Board = Backbone.View.extend({
         ];
 
         _.each(this.$('li'), function(element, index) {
-            var position = {el: element, position: index, board: this};
+            var position = {
+                el: element,
+                position: index,
+                game: this.game,
+                matching: this.matchingCombinations(index)
+            };
 
             this.map.push(new TicTacToe.Position(position));
         }, this);
@@ -36,45 +36,10 @@ TicTacToe.Board = Backbone.View.extend({
         return this.map[index];
     },
 
-    setPlayers: function(playerOne, playerTwo) {
-        this.players[0] = playerOne;
-        this.players[1] = playerTwo;
-
-        this.getCurrentPlayer().move(this);
-    },
-
     restart: function() {
         _.each(this.map, function(position) {
             position.clear();
         });
-
-        this.getCurrentPlayer().move(this);
-    },
-
-    getCurrentPlayer: function() {
-        return this.players[this.currentPlayer];
-    },
-
-    nextPlayer: function(position) {
-        this.currentPlayer = this.currentPlayer == 0 ? 1 : 0;
-
-        if (this.weHaveAWinner(position) || this.isATie()) {
-            return;
-        }
-
-        if (player = this.getCurrentPlayer()) {
-            player.move(this);
-        }
-    },
-
-    weHaveAWinner: function(position) {
-        if (position && position.matchWin()) {
-            this.trigger('winner', position.getPlayer());
-
-            return true;
-        }
-
-        return false;
     },
 
     nextAvailablePosition: function() {
@@ -83,20 +48,9 @@ TicTacToe.Board = Backbone.View.extend({
         });
     },
 
-    isATie: function() {
-        if (this.nextAvailablePosition()) {
-            return false;
-        }
-
-        this.trigger('tie');
-
-        return true;
-    },
-
-
-    matchingCombinations: function(position) {
+    matchingCombinations: function(positionIndex) {
         return _.filter(this.match, function(combination) {
-            return _.contains(combination, position.getPosition());
+            return _.contains(combination, positionIndex);
         }, this);
     }
 });
