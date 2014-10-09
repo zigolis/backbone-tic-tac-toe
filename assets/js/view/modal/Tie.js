@@ -1,7 +1,9 @@
 var TicTacToe = TicTacToe || {};
 
 TicTacToe.TieModal = TicTacToe.Modal.extend({
-    el: '.overlay, .tie',
+    template: _.template( $('#tmp-tie').html() ),
+
+    el: '.tie',
 
     events: {
         'click .play': 'hide'
@@ -9,5 +11,13 @@ TicTacToe.TieModal = TicTacToe.Modal.extend({
 
     configureListeners: function(game) {
         this.listenTo(game, 'tie', this.show);
+    },
+
+    initialize: function() {
+        this.render();
+    },
+
+    render: function() {
+        this.$el.html(this.template());
     }
 });
