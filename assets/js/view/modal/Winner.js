@@ -3,7 +3,7 @@ var TicTacToe = TicTacToe || {};
 TicTacToe.WinnerModal = TicTacToe.Modal.extend({
     template: _.template( $('#tmp-winner').html() ),
 
-    el: '.winner',
+    el: '.ct',
 
     events: {
         'click .play': 'hide'
@@ -13,16 +13,17 @@ TicTacToe.WinnerModal = TicTacToe.Modal.extend({
         this.listenTo(game, 'winner', this.show);
     },
 
-    initialize: function() {
-        this.render();
-    },
-
-    render: function() {
-        this.$el.html(this.template());
+    render: function(game) {
+        this.$('.winner').html(this.template());
     },
 
     show: function(player) {
+        this.render();
         this.$('b').text(player.getLabel());
-        this.$el.removeClass('hide');
+        this.$('.overlay, .winner').removeClass('hide');
+    },
+
+    hide: function() {
+        this.$('.overlay, .winner').addClass('hide');
     }
 });

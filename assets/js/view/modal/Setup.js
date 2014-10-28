@@ -3,7 +3,7 @@ var TicTacToe = TicTacToe || {};
 TicTacToe.SetupModal = TicTacToe.Modal.extend({
     template: _.template( $('#tmp-setup').html() ),
 
-    el: '.setup',
+    el: '.ct',
 
     events: {
         'click .cpu'   : 'cpu',
@@ -19,16 +19,20 @@ TicTacToe.SetupModal = TicTacToe.Modal.extend({
     },
 
     render: function() {
-        this.$el.html(this.template());
+        this.$('.setup').html(this.template());
+    },
+
+    show: function() {
+        this.$('.overlay, .setup').removeClass('hide');
     },
 
     cpu: function() {
         this.trigger('playerConfiguration', true);
-        this.hide();
+        this.$('.overlay, .setup').addClass('hide');
     },
 
     human: function() {
         this.trigger('playerConfiguration', false);
-        this.hide();
+        this.$('.overlay, .setup').addClass('hide');
     }
 });

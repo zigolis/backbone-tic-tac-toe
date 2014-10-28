@@ -3,7 +3,7 @@ var TicTacToe = TicTacToe || {};
 TicTacToe.TieModal = TicTacToe.Modal.extend({
     template: _.template( $('#tmp-tie').html() ),
 
-    el: '.tie',
+    el: '.ct',
 
     events: {
         'click .play': 'hide'
@@ -13,11 +13,16 @@ TicTacToe.TieModal = TicTacToe.Modal.extend({
         this.listenTo(game, 'tie', this.show);
     },
 
-    initialize: function() {
-        this.render();
+    render: function() {
+        this.$('.tie').html(this.template());
     },
 
-    render: function() {
-        this.$el.html(this.template());
+    show: function() {
+        this.render();
+        this.$('.overlay, .tie').removeClass('hide');
+    },
+
+    hide: function() {
+        this.$('.overlay, .tie').addClass('hide');
     }
 });
