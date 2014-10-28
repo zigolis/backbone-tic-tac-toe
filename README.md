@@ -21,3 +21,7 @@ After that, enter the folder ```$ cd backbone-tic-tac-toe``` and execute this li
 ## Running the game
 
 The Tic-Tac-Toe game can be run locally from `file://` making development easy :)
+
+## You can see the game online here :-D
+
+[Zig-Tag-Toe Game :-P](http://zigolis.github.io/backbone-tic-tac-toe/)
