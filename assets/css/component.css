@@ -24,9 +24,9 @@ body {
 }
 
 .jumbotron h1 {
+    font-weight: 100;
     margin-top: 0;
     margin-bottom: 0;
-    font-weight: 100;
 }
 
 h2 {
@@ -35,10 +35,10 @@ h2 {
 }
 
 h3 {
+    color: #000;
     font-size: 26px;
     font-weight: 100;
     text-align: center;
-    color: #000;
 }
 
 .stage {
@@ -47,37 +47,37 @@ h3 {
 
 .btn {
     color: #fff;
-    font-weight: 100;
-    font-size: 22px;
-    margin: 0 auto;
     display: block;
+    font-size: 22px;
+    font-weight: 100;
+    margin: 0 auto;
 }
 
 ul {
     list-style: none;
-    overflow: auto;
     margin: 50px auto;
     max-width: 375px;
+    overflow: auto;
     padding: 0;;
 }
 
 li {
     transition: background .5s;
 
+    background: #f1f1f1;
+    border-radius: 10px;
+    cursor: pointer;
     float: left;
     font-size: 45px;
-    background: #f1f1f1;
-    max-width: 120px;
-    padding: 25px 50px;
-    text-align: center;
+    height: 114px;
     margin-right: 2px;
     margin-bottom: 2px;
-    cursor: pointer;
-    border-radius: 10px;
     margin-left: 2px;
     margin-top: 2px;
-    height: 114px;
+    max-width: 120px;
     min-width: 120px;;;
+    padding: 25px 50px;
+    text-align: center;
 }
 
 
@@ -94,9 +94,9 @@ button, button:hover {
 footer {
     background-color: #203041;
     bottom: 0;
-    padding: 20px 0;
     font-size: 14px;
     left: 0;
+    padding: 20px 0;
     position: fixed;
     right: 0;
     text-align: center;
@@ -118,7 +118,7 @@ footer p {
     top: 0;
 }
 
-.success {
+.winner, .setup, .tie {
     background: #f1f1f1;
     border: 4px solid #ddd;
     border-radius: 8px;
@@ -131,10 +131,23 @@ footer p {
     width: 400px;
 }
 
-.success p {
+.winner p, .tie p {
     font-size: 30px;
     margin-bottom: 40px;
     text-align: center;
+}
+
+.setup {
+    text-align: center;
+}
+
+.setup p {
+    font-size: 25px;
+    margin-bottom: 40px;
+}
+
+.setup .btn {
+    display: inline-block;
 }
 
 audio {

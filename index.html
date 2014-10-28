@@ -42,14 +42,15 @@
                 </div>
             </div>
 
-            <div class="overlay hide"></div>
-            <div class="success hide">
-                <p>The player <b></b> won!</p>
-                <button class="btn btn-lg btn-primary play">Play again</button>
+            <div class="ct">
+                <div class="overlay hide"></div>
+                <div class="setup hide"></div>
+                <div class="winner hide"></div>
+                <div class="tie hide"></div>
             </div>
 
             <audio src="assets/audio/button.mp3" preload="auto" controls>
-                <p>Seu nevegador não suporta o elemento audio.</p>
+                <p>Your browser does not have audio element support.</p>
             </audio>
         </section><!-- stage -->
 
@@ -60,9 +61,37 @@
             </p>
         </footer>
 
+        <script type="text/html" id="tmp-setup">
+            <p>Would you like to play <br> against the CPU?</p>
+            <button class="btn btn-lg btn-primary cpu">Yes</button>
+            <button class="btn btn-lg btn-danger multi">No</button>
+        </script>
+
+        <script type="text/html" id="tmp-winner">
+            <p>The player <b></b> won!</p>
+            <button class="btn btn-lg btn-primary play">Play again</button>
+        </script>
+
+        <script type="text/html" id="tmp-tie">
+            <p>No winner for now =/</p>
+            <button class="btn btn-lg btn-primary play">Play again</button>
+        </script>
+
         <script src="assets/vendor/jquery/dist/jquery.min.js"></script>
         <script src="assets/vendor/underscore/underscore-min.js"></script>
         <script src="assets/vendor/backbone/backbone.js"></script>
+
+        <script src="assets/js/model/Player.js"></script>
+        <script src="assets/js/model/Cpu.js"></script>
+        <script src="assets/js/model/Players.js"></script>
+
+        <script src="assets/js/view/Modal.js"></script>
+        <script src="assets/js/view/modal/Setup.js"></script>
+        <script src="assets/js/view/modal/Winner.js"></script>
+        <script src="assets/js/view/modal/Tie.js"></script>
+        <script src="assets/js/view/Position.js"></script>
+        <script src="assets/js/view/Board.js"></script>
+        <script src="assets/js/view/AudioPlayer.js"></script>
         <script src="assets/js/view/Tictactoe.js"></script>
         <script src="assets/js/app.js"></script>
     </body>
